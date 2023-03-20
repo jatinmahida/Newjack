@@ -25,9 +25,9 @@ def download_and_parse_article(url):
 
 
 
-def get_google_news_data(query, num_results=10):
+def get_google_news_data(query, num_results=10, api_key=None):
     params = {
-        "api_key": serpapi_key,
+        "api_key": api_key if api_key else serpapi_key,
         "engine": "google",
         "q": query,
         "tbm": "nws",
@@ -51,7 +51,7 @@ def scrape_article_text(url):
     article.parse()
     return article.text
 
-def generate_summary(text):
+def generate_summary(text, api_key=None):
     prompt = f"Please provide a short summary of the salient points for newsjacking ideation for this article: {text}"
     response = openai.ChatCompletion.create(
         model="gpt-4-0314",
@@ -63,6 +63,7 @@ def generate_summary(text):
         n=1,
         stop=None,
         temperature=0.5,
+        api_key=api_key if api_key else openai_key
     )
     summary = response['choices'][0]['message']['content']
     return summary.strip()
