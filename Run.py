@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import requests
 import json
+import base64
 import os
 from serpapi import GoogleSearch
 from newspaper import Article
