@@ -68,7 +68,7 @@ def generate_summary(text, api_key=None):
     summary = response['choices'][0]['message']['content']
     return summary.strip()
 
-def generate_content(articles, summaries):
+def generate_content(articles, summaries, api_key=None):
     content = []
     for i, summary in enumerate(summaries):
         prompt = f"Based on the summary of article '{articles[i]['title']}', please provide a story title, description, and dataset sources for newsjacking ideation."
@@ -82,6 +82,7 @@ def generate_content(articles, summaries):
             n=1,
             stop=None,
             temperature=0.5,
+            api_key=api_key if api_key else openai_key
         )
         generated_content = response['choices'][0]['message']['content'].strip()
         content.append({
