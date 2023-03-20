@@ -91,16 +91,23 @@ def generate_content(articles, summaries, openai_key, num_ideas=3):
         )
         
         generated_content = response['choices'][0]['message']['content'].strip()
-        generated_ideas = generated_content.split('\n')[:num_ideas]
+        generated_ideas = generated_content.split('\n')[:num_ideas * 3]
 
-        for idea in generated_ideas:
+        for j in range(0, len(generated_ideas), 3):
+            idea_title = generated_ideas[j].strip()
+            idea_description = generated_ideas[j+1].strip() if j+1 < len(generated_ideas) else ""
+            idea_dataset_source = generated_ideas[j+2].strip() if j+2 < len(generated_ideas) else ""
+
             content.append({
                 'article_title': articles[i]['title'],
                 'input_summary': summary,
-                'generated_idea': idea
+                'generated_idea_title': idea_title,
+                'generated_idea_description': idea_description,
+                'generated_idea_dataset_source': idea_dataset_source
             })
 
     return content
+
 
 def main():
     st.set_page_config(page_title='Newsjacking Ideation', layout='wide')
@@ -143,7 +150,8 @@ def main():
 
                 content = generate_content(articles, article_summaries, openai_key, num_ideas=10)
 
-                content_df = pd.DataFrame(content)
+                content_df = pd.DataFrame(content, columns=['article_title', 'input_summary', 'generated_idea_title', 'generated_idea_description', 'generated_idea_dataset_source'])
+
 
                 st.write(content_df)
 
