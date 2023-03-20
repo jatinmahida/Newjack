@@ -1,10 +1,9 @@
 import streamlit as st
 import pandas as pd
-import base64
 import concurrent.futures
 
 # Import your existing functions and variables from your original script
-from your_script import get_google_news_data, download_and_parse_article, generate_summary, generate_content
+from getdata import get_google_news_data, download_and_parse_article, generate_summary, generate_content
 
 def main():
     st.set_page_config(page_title='Newsjacking Ideation', layout='wide')
