@@ -72,10 +72,11 @@ def generate_summary(text, api_key=None):
     summary = response['choices'][0]['message']['content']
     return summary.strip()
 
-def generate_content(articles, summaries, api_key=None):
+def generate_content(articles, summaries, openai_key, num_ideas=3):
     content = []
+
     for i, summary in enumerate(summaries):
-        prompt = f"Based on the summary of article '{articles[i]['title']}', please provide a story title, description, and dataset sources for newsjacking ideation."
+        prompt = f"Based on the summary of article '{articles[i]['title']}', please provide {num_ideas} story titles, descriptions, and dataset sources for newsjacking ideation."
         response = openai.ChatCompletion.create(
             model="gpt-4",
             messages=[
@@ -86,15 +87,21 @@ def generate_content(articles, summaries, api_key=None):
             n=1,
             stop=None,
             temperature=0.5,
-            api_key=api_key if api_key else openai_key
+            api_key=openai_key,
         )
+        
         generated_content = response['choices'][0]['message']['content'].strip()
-        content.append({
-            'article_title': articles[i]['title'],
-            'input_summary': summary,
-            'generated_content': generated_content
-        })
+        generated_ideas = generated_content.split('\n')[:num_ideas]
+
+        for idea in generated_ideas:
+            content.append({
+                'article_title': articles[i]['title'],
+                'input_summary': summary,
+                'generated_idea': idea
+            })
+
     return content
+
 def main():
     st.set_page_config(page_title='Newsjacking Ideation', layout='wide')
     st.title('Newsjacking Ideation App')
@@ -134,7 +141,8 @@ def main():
                 articles_df['text'] = article_texts
                 articles_df['summary'] = article_summaries
 
-                content = generate_content(articles, article_summaries, openai_key)
+                content = generate_content(articles, article_summaries, openai_key, num_ideas=10)
+
                 content_df = pd.DataFrame(content)
 
                 st.write(content_df)
