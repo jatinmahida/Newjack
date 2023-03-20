@@ -91,12 +91,13 @@ def generate_content(articles, summaries, openai_key, num_ideas=3):
         )
         
         generated_content = response['choices'][0]['message']['content'].strip()
-        generated_ideas = generated_content.split('\n')[:num_ideas * 3]
+        generated_ideas = generated_content.split('\n\n')[:num_ideas]
 
-        for j in range(0, len(generated_ideas), 3):
-            idea_title = generated_ideas[j].strip()
-            idea_description = generated_ideas[j+1].strip() if j+1 < len(generated_ideas) else ""
-            idea_dataset_source = generated_ideas[j+2].strip() if j+2 < len(generated_ideas) else ""
+        for j, idea in enumerate(generated_ideas):
+            lines = idea.split('\n')
+            idea_title = lines[0].strip()
+            idea_description = lines[1].strip() if len(lines) > 1 else ""
+            idea_dataset_source = lines[2].strip() if len(lines) > 2 else ""
 
             content.append({
                 'article_title': articles[i]['title'],
@@ -107,6 +108,7 @@ def generate_content(articles, summaries, openai_key, num_ideas=3):
             })
 
     return content
+
 
 
 def main():
