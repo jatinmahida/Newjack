@@ -1,6 +1,6 @@
 streamlit
 openai
-serpapi
+google-search-results
 newspaper3k
 nltk
 requests
