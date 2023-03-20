@@ -75,8 +75,8 @@ def generate_summary(text, api_key=None):
 def generate_content(articles, summaries, openai_key, num_ideas=3):
     content = []
 
-    for i, summary in enumerate(summaries):
-        prompt = f"Based on the summary of article '{articles[i]['title']}', please provide {num_ideas} story titles, descriptions, and dataset sources for newsjacking ideation."
+    for i, (article, summary) in enumerate(zip(articles, summaries)):
+        prompt = f"Based on the summary of article '{article['title']}', please provide {num_ideas} story titles, descriptions, and dataset sources for newsjacking ideation."
         response = openai.ChatCompletion.create(
             model="gpt-4",
             messages=[
@@ -100,7 +100,7 @@ def generate_content(articles, summaries, openai_key, num_ideas=3):
             idea_dataset_source = lines[2].strip() if len(lines) > 2 else ""
 
             content.append({
-                'article_title': articles[i]['title'],
+                'article_title': article['title'],
                 'input_summary': summary,
                 'generated_idea_title': idea_title,
                 'generated_idea_description': idea_description,
@@ -108,6 +108,7 @@ def generate_content(articles, summaries, openai_key, num_ideas=3):
             })
 
     return content
+
 
 
 
