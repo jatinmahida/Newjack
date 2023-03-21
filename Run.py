@@ -81,7 +81,7 @@ def generate_content(articles, summaries, openai_key, num_ideas=3):
         
         for j in range(num_ideas):
             response = openai.ChatCompletion.create(
-                model="gpt-4",
+                model="gpt-4-0314",
                 messages=[
                     {"role": "system", "content": "You are an expert at generating newsjacking ideas based on article summaries."},
                     {"role": "user", "content": f"{prompt}: {summary}"},
@@ -108,7 +108,7 @@ def generate_content(articles, summaries, openai_key, num_ideas=3):
             })
 
             # Add a delay between API calls
-            time.sleep(1)
+            time.sleep(10)
 
     return content
 
