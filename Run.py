@@ -12,6 +12,7 @@ from serpapi import GoogleSearch
 from newspaper import Article
 import nltk
 import concurrent.futures
+import time
 
 nltk.download('punkt')
 
@@ -105,6 +106,9 @@ def generate_content(articles, summaries, openai_key, num_ideas=3):
                 'generated_idea_description': idea_description,
                 'generated_idea_dataset_source': idea_dataset_source
             })
+
+            # Add a delay between API calls
+            time.sleep(1)
 
     return content
 
