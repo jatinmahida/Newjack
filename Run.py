@@ -155,7 +155,7 @@ def main():
                 articles_df['text'] = article_texts
                 articles_df['summary'] = article_summaries
 
-                content = generate_content(articles, article_summaries, openai_key, num_ideas=10)
+                content = generate_content(articles, article_summaries, openai_key, num_ideas=2)
 
                 content_df = pd.DataFrame(content, columns=['article_title', 'input_summary', 'generated_idea_title', 'generated_idea_description', 'generated_idea_dataset_source'])
 
