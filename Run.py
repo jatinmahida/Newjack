@@ -77,24 +77,23 @@ def generate_content(articles, summaries, openai_key, num_ideas=3):
 
     for i, (article, summary) in enumerate(zip(articles, summaries)):
         prompt = f"Based on the summary of article '{article['title']}', please provide {num_ideas} story titles, descriptions, and dataset sources for newsjacking ideation."
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "You are an expert at generating newsjacking ideas based on article summaries."},
-                {"role": "user", "content": f"{prompt}: {summary}"},
-            ],
-            max_tokens=2000,
-            n=1,
-            stop=None,
-            temperature=0.5,
-            api_key=openai_key,
-        )
         
-        generated_content = response['choices'][0]['message']['content'].strip()
-        generated_ideas = generated_content.split('\n\n')[:num_ideas]
-
-        for j, idea in enumerate(generated_ideas):
-            lines = idea.split('\n')
+        for j in range(num_ideas):
+            response = openai.ChatCompletion.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": "You are an expert at generating newsjacking ideas based on article summaries."},
+                    {"role": "user", "content": f"{prompt}: {summary}"},
+                ],
+                max_tokens=200,
+                n=1,
+                stop=None,
+                temperature=0.5,
+                api_key=openai_key,
+            )
+            
+            generated_content = response['choices'][0]['message']['content'].strip()
+            lines = generated_content.split('\n')
             idea_title = lines[0].strip()
             idea_description = lines[1].strip() if len(lines) > 1 else ""
             idea_dataset_source = lines[2].strip() if len(lines) > 2 else ""
@@ -108,6 +107,7 @@ def generate_content(articles, summaries, openai_key, num_ideas=3):
             })
 
     return content
+
 
 
 
